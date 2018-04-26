@@ -2,12 +2,12 @@ module dec3to8
   (
     input [2:0] W,
     input En,
-
+		
     output reg [7:0] Y
   );
 
 	always @(W or En) begin
-		if (En == 1)
+		if (En == 1) begin
 			case (W)
 				3'b000: Y = 8'b10000000;
 				3'b001: Y = 8'b01000000;
@@ -17,9 +17,10 @@ module dec3to8
 				3'b101: Y = 8'b00000100;
 				3'b110: Y = 8'b00000010;
 				3'b111: Y = 8'b00000001;
-
+				
 			endcase
-		else
+		end
+		else begin
 			Y = 8'b00000000;
 		end
 	end

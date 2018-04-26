@@ -1,10 +1,10 @@
 module regn
 	(
-		input [15:0] R;
-		input	Rin;
-		input Clock;
-
-		output reg [15:0]Q;
+		input [15:0] R,
+		input	Rin,
+		input Clock,
+    
+		output reg [15:0]Q
 	);
 
 	initial begin
@@ -20,11 +20,11 @@ endmodule
 
 module regi
 	(
-		input [8:0] R;
-		input	Rin;
-		input Clock;
-
-		output reg [8:0]Q;
+		input [8:0] R,
+		input	Rin,
+		input Clock,
+		
+		output reg [8:0]Q
 	);
 
 	initial begin

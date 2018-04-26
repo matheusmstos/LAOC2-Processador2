@@ -1,14 +1,12 @@
-module Processador
+module Processor
 	(
 		input [15:0] DIN,
-		input Clock,
-		input Resetn,
-		input Run,
+		input Clock, Resetn, Run,
 
 		output reg Done,
-		output reg [15:0] Buswires,
-		output [1:0] Ciclo;
-
+		output reg [15:0] DOUT,
+		output [15:0] Buswires,
+		output [1:0] Ciclo
 	);
 
 	reg [7:0] R_in, R_out;
@@ -35,11 +33,11 @@ module Processador
 
 	ALU alu (A, Buswires, opcode, ALUresult);
 
-	Multiplexador mulx(DIN,R0,R1,R2,R3,R4,R5,R6,R7,G,R_out,G_out,Din_out,Buswires);
+	Multiplexador mulx(R0,R1,R2,R3,R4,R5,R6,R7,DIN,G,R_out,G_out,Din_out,Buswires);
 
 //Ciclos ---------------------------------------
 
-	Upcount Counter (Clear, Clock, Ciclo);
+	Upcount Counter (Clock, Clear Ciclo);
 	assign opcode = IR[8:6];
 	dec3to8 decX (IR[5:3], 1'b1, Xreg);
 	dec3to8 decY (IR[2:0], 1'b1, Yreg);
@@ -139,9 +137,12 @@ module Processador
 	wire Run;
 	wire [2:0] Ciclo;
 
-	Processador pc1 (MemOut, KEY[3], SW[16], SW[17], Done, Escrita, AdressOut
-										Buswires, DOUT, Ciclo);
-	ramlpm mem (AdressOut[4:0], KEY[3], DOUT, Escrita, MemOut);
+	//Proc pc1 (MemOut, KEY[3], SW[16], SW[17], Done, Escrita, AdressOut, Buswires, DOUT, Ciclo);
+
+  	//             DIN,    Clock,  Resetn, Run,    Done, DOUT, Buswires, Ciclo
+	Processor pc1 (MemOut, KEY[3], SW[16], SW[17], Done, DOUT, Buswires, Ciclo);
+	ramlpm    mem (AdressOut[4:0], KEY[3], MemOut);
+	CounterPC c1  (KEY[3], SW[16], )
 
 	assign LEDR[15:0] = Buswires[15:0];
 	assign LEDG[0] = Escrita;
@@ -163,14 +164,14 @@ module Processador
 
 	*/
 
-	Display d7 (Buswires[15:12], HEX7);
+	Display d7 (Buswires[15:12], 	 HEX7);
 	Display d6 ({1'b0,Ciclo[2:0]}, HEX6);
-	Display d5 (AdressOut[7:4], HEX5);
-	Display d4 (AdressOut[3:0], HEX4);
-	Display d3 (MemOut[15:12], HEX5);
-	Display d2 (MemOut[11:8], HEX5);
-	Display d1 (MemOut[7:4], HEX5);
-	Display d0 (MemOut[3:0], HEX5);
+	Display d5 (AdressOut[7:4], 	 HEX5);
+	Display d4 (AdressOut[3:0], 	 HEX4);
+	Display d3 (MemOut[15:12], 	 HEX3);
+	Display d2 (MemOut[11:8], 		 HEX2);
+	Display d1 (MemOut[7:4], 		 HEX1);
+	Display d0 (MemOut[3:0], 		 HEX0);
 
 
 
