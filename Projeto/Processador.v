@@ -135,6 +135,7 @@ module Processador
 	wire Done;
 	wire Run;
 	wire [2:0] Ciclo;
+	wire [15:0]R0, R1;
 	//wire MClock = PClock & Done;
 
 
@@ -166,18 +167,31 @@ module Processador
 
 	*/
 
+	/*
 	Display d7 (Buswires[15:12], 	 HEX7);
 	Display d6 ({1'b0,Ciclo[2:0]}, HEX6);
+	
 	Display d5 ({2'b00,AdressOut[5:4]},HEX5);
 	Display d4 (AdressOut[3:0], 	 HEX4);
+	
 	Display d3 (MemOut[15:12], 	 HEX3);
 	Display d2 (MemOut[11:8], 		 HEX2);
 	Display d1 (MemOut[7:4], 		 HEX1);
 	Display d0 (MemOut[3:0], 		 HEX0);
+	
+	
+*/
 
-
-
-
+	Display d7 (R1[3:0], HEX7);
+	Display d6 (R0[3:0], HEX6);
+	
+	Display d5 ({1'b0,Ciclo[2:0]}, HEX5);
+	//Display d4 (AdressOut[3:0], 	 HEX4);
+	
+	Display d3 (Buswires[15:12], 	 HEX3);
+	Display d2 (Buswires[11:8], 	 HEX2);
+	Display d1 (Buswires[7:4], 	 HEX1);
+	Display d0 (Buswires[3:0], 	 HEX0);
 
 
 endmodule
