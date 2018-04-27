@@ -26,29 +26,28 @@ module dec3to8
 	end
 endmodule
 
-module Display (Entrada, SaidaDisplay);
-  input [3:0] Entrada;
-  output reg [0:6] SaidaDisplay;
-
-  //Decodificador Display de 7 segmentos
-  always begin
-    case(Entrada)
-      0:  SaidaDisplay = 7'b1000000; //0
-      1:  SaidaDisplay = 7'b1001111; //1
-      2:  SaidaDisplay = 7'b0010010; //2
-      3:  SaidaDisplay = 7'b0000110; //3
-      4:  SaidaDisplay = 7'b1001100; //4
-      5:  SaidaDisplay = 7'b0100100; //5
-      6:  SaidaDisplay = 7'b0100000; //6
-      7:  SaidaDisplay = 7'b0001111; //7
-      8:  SaidaDisplay = 7'b0000000; //8
-      9:  SaidaDisplay = 7'b0001100; //9
-      10: SaidaDisplay = 7'b0001000; //A
-      11: SaidaDisplay = 7'b1100000; //B
-      12: SaidaDisplay = 7'b0110001; //C
-      13: SaidaDisplay = 7'b1000010; //D
-      14: SaidaDisplay = 7'b0110000; //E
-      15: SaidaDisplay = 7'b0111000; //F
-    endcase
-  end
+module Display(Valor,Mostra);
+	input [3:0]Valor;
+	output reg [6:0]Mostra;
+	
+	always begin
+		case (Valor)
+				4'b0000: Mostra = 7'b1000000;			// 0
+				4'b0001: Mostra =	7'b1111001;			//	1
+				4'b0010: Mostra = 7'b0100100;			//	2
+				4'b0011: Mostra = 7'b0110000;			//	3
+				4'b0100: Mostra = 7'b0011001;			// 4
+				4'b0101: Mostra = 7'b0010010;			// 5
+				4'b0110: Mostra = 7'b0000010;			// 6
+				4'b0111: Mostra = 7'b1011000;			// 7
+				4'b1000: Mostra = 7'b0000000;			// 8 certo
+				4'b1001: Mostra = 7'b0010000;			// 9
+				4'b1010: Mostra = 7'b0001000;		   // A
+				4'b1011: Mostra = 7'b0000011;			// B
+				4'b1100: Mostra = 7'b1000110;			// C
+				4'b1101: Mostra = 7'b0100001;			// D
+				4'b1110: Mostra = 7'b0000110;			// E
+				4'b1111: Mostra = 7'b0001110;			// F
+		endcase
+	end
 endmodule

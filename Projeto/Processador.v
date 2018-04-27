@@ -5,7 +5,8 @@ module Processor
 
 		output reg Done,
 		output [15:0] Buswires,
-		output [1:0] Ciclo
+		output [1:0] Ciclo,
+		output reg C0, C1
 	);
 
 	reg [7:0] R_in, R_out;
@@ -15,7 +16,7 @@ module Processor
 	wire [15:0] R0, R1, R2, R3, R4, R5, R6, R7, A, G, ALUresult;
 	wire [7:0] Xreg, Yreg;
 	wire [2:0] opcode;
-	wire Clear = Done | Resetn;
+	wire Clear = Done | Resetn;//Done | Resetn;
 
 //-----------------------------------------------
 	regn reg_0(Buswires, R_in[0], Clock, R0);
@@ -131,41 +132,27 @@ module Processador
 	wire [5:0] AdressOut;
 
 	wire [15:0] MemOut;
-	wire Escrita;
 	wire Done;
 	wire Run;
-	wire [2:0] Ciclo;
-	wire [15:0]R0, R1;
-	//wire MClock = PClock & Done;
+	wire [1:0] Ciclo;
+	wire [15:0]R0, R1, R2, R3;
+	wire PClock;
+	wire MClock;
 
-
-	CounterPC c1  (KEY[3], SW[16], AdressOut);
-	ramlpm    mem (AdressOut, KEY[3], MemOut);
-	Processor pc1 (MemOut, KEY[3], SW[16], SW[17], Done, Buswires, Ciclo);
+	assign PClock = ~KEY[0];
+	assign MClock = ~KEY[1];
+	
+	CounterPC c1  (MClock, SW[16], AdressOut);
+	ramlpm    mem (AdressOut, MClock, MemOut);
+	Processor pc1 (MemOut, PClock, SW[16], SW[17], Done, Buswires, Ciclo, R0, R1);
 	
 	//CounterPC   (MClock, Resetn,n)
 	//ROMLPM		  (n,MemoryClock,data)
 	//Processor   (data,PClock,Resetn,Run,BusWires,Done)
 	
 	assign LEDR[15:0] = Buswires[15:0];
-	assign LEDG[0] = Escrita;
 	assign LEDG[8] = Done;
 
-	/*
-		SW 17 - Run
-		KEY 3 - Clock
-		KEY 2 - Resetn
-
-		LEDG 8 - Done
-		LEDG 0 - Write
-		LEDR 15:0 - AdressOut
-
-		Display 3:0 - DIN
-		Display 4 - AdressOut
-
-		Display 5:8 - DOUT
-
-	*/
 
 	/*
 	Display d7 (Buswires[15:12], 	 HEX7);
@@ -182,16 +169,16 @@ module Processador
 	
 */
 
-	Display d7 (R1[3:0], HEX7);
-	Display d6 (R0[3:0], HEX6);
+	Display d7 (MClock, HEX7);
+	Display d6 (PClock, HEX6);
 	
-	Display d5 ({1'b0,Ciclo[2:0]}, HEX5);
-	//Display d4 (AdressOut[3:0], 	 HEX4);
+	Display d5 (Ciclo, HEX5);
+	Display d4 (AdressOut[3:0], 	 HEX4);
 	
-	Display d3 (Buswires[15:12], 	 HEX3);
-	Display d2 (Buswires[11:8], 	 HEX2);
-	Display d1 (Buswires[7:4], 	 HEX1);
-	Display d0 (Buswires[3:0], 	 HEX0);
+	Display d3 (R0[3:0], 	 HEX3);
+	Display d2 (R1[3:0], 		 HEX2);
+	Display d1 (MemOut[7:4], 		 HEX1);
+	Display d0 (MemOut[3:0], 		 HEX0);
 
 
 endmodule

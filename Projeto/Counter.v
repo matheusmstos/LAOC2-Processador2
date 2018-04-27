@@ -26,20 +26,20 @@ endmodule
 
 module Upcount
 	(
-		input MClock,
+		input PClock,
 		input Resetn,
 
 		output reg [1:0] n
 	);
 
 	initial begin
-		n = 2'b00;
+		n = 2'b11;
 	end
 
-	always @(posedge MClock) begin
+	always @(posedge PClock) begin
 
 		if(Resetn == 1'b1) begin
-			n = 2'b00;
+			n = 2'b11;
 		end
 		else begin
 			n = n + 1'b1;

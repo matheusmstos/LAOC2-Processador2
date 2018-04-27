@@ -8,7 +8,7 @@ module regn
 	);
 
 	initial begin
-		Q = 16'b0;
+		Q = 16'b0000000000000010;
 	end
 
 	always @(posedge Clock) begin
