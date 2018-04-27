@@ -4,7 +4,6 @@ module Processor
 		input Clock, Resetn, Run,
 
 		output reg Done,
-		output reg [15:0] DOUT,
 		output [15:0] Buswires,
 		output [1:0] Ciclo
 	);
@@ -37,7 +36,7 @@ module Processor
 
 //Ciclos ---------------------------------------
 
-	Upcount Counter (Clock, Clear Ciclo);
+	Upcount Counter (Clock, Clear, Ciclo);
 	assign opcode = IR[8:6];
 	dec3to8 decX (IR[5:3], 1'b1, Xreg);
 	dec3to8 decY (IR[2:0], 1'b1, Yreg);
@@ -129,21 +128,24 @@ module Processador
 
 	wire [15:0] Buswires;
 	wire [15:0] DIN;
-	wire [15:0] AdressOut;
-	wire [15:0] DOUT;
+	wire [5:0] AdressOut;
+
 	wire [15:0] MemOut;
 	wire Escrita;
 	wire Done;
 	wire Run;
 	wire [2:0] Ciclo;
+	//wire MClock = PClock & Done;
 
-	//Proc pc1 (MemOut, KEY[3], SW[16], SW[17], Done, Escrita, AdressOut, Buswires, DOUT, Ciclo);
 
-  	//             DIN,    Clock,  Resetn, Run,    Done, DOUT, Buswires, Ciclo
-	Processor pc1 (MemOut, KEY[3], SW[16], SW[17], Done, DOUT, Buswires, Ciclo);
-	ramlpm    mem (AdressOut[4:0], KEY[3], MemOut);
-	CounterPC c1  (KEY[3], SW[16], )
-
+	CounterPC c1  (KEY[3], SW[16], AdressOut);
+	ramlpm    mem (AdressOut, KEY[3], MemOut);
+	Processor pc1 (MemOut, KEY[3], SW[16], SW[17], Done, Buswires, Ciclo);
+	
+	//CounterPC   (MClock, Resetn,n)
+	//ROMLPM		  (n,MemoryClock,data)
+	//Processor   (data,PClock,Resetn,Run,BusWires,Done)
+	
 	assign LEDR[15:0] = Buswires[15:0];
 	assign LEDG[0] = Escrita;
 	assign LEDG[8] = Done;
@@ -166,7 +168,7 @@ module Processador
 
 	Display d7 (Buswires[15:12], 	 HEX7);
 	Display d6 ({1'b0,Ciclo[2:0]}, HEX6);
-	Display d5 (AdressOut[7:4], 	 HEX5);
+	Display d5 ({2'b00,AdressOut[5:4]},HEX5);
 	Display d4 (AdressOut[3:0], 	 HEX4);
 	Display d3 (MemOut[15:12], 	 HEX3);
 	Display d2 (MemOut[11:8], 		 HEX2);
